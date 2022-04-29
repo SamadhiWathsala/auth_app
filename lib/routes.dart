@@ -6,5 +6,6 @@ import 'package:flutter/material.dart';
 final Map<String, WidgetBuilder> routes = {
   GetOTP.routeName: (context) => const GetOTP(),
   CreateProfile.routeName: (context) => const CreateProfile(),
-  Profile.routeName: (context) => const Profile()
+  Profile.routeName: (context) => const Profile(),
+  CreateProfile.routeName: (context) => const CreateProfile()
 };

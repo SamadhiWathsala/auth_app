@@ -1,3 +1,4 @@
+import 'package:auth_app/screans/create_profile.dart';
 import 'package:auth_app/screans/profile.dart';
 import 'package:flutter/material.dart';
 
@@ -14,14 +15,13 @@ class _InputOTPState extends State<InputOTP> {
 
   void onSubmit() async{
     if(_formKey.currentState!.validate()){
-      Navigator.pushNamed(context, Profile.routeName);
+      Navigator.pushNamed(context, CreateProfile.routeName);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final _node = FocusScope.of(context);
-    final size = MediaQuery.of(context).size;
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -32,6 +32,7 @@ class _InputOTPState extends State<InputOTP> {
             padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 15),
             child: TextFormField(
               textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
               onEditingComplete: () => _node.nextFocus(),
               decoration: const InputDecoration(
                 labelText: 'Enter OTP',

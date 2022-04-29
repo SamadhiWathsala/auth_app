@@ -31,6 +31,7 @@ class _InputPhoneState extends State<InputPhone> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 15),
             child: TextFormField(
+              keyboardType: TextInputType.phone,
               textAlign: TextAlign.center,
               onEditingComplete: () => _node.nextFocus(),
               decoration: const InputDecoration(
