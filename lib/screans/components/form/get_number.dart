@@ -45,11 +45,18 @@ class _InputPhoneState extends State<InputPhone> {
                 labelText: 'Phone number',
                 prefixIcon: Icon(Icons.phone_outlined),
               ),
+              maxLength: 12,
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your phone number';
+
+                if(value == null || value.isEmpty){
+                  return 'Required field';
+                }else if(value.length != 12){
+                  return 'Should be valid phone number';
+                }else if(!value.startsWith('+94')){
+                  return 'Use valid format';
+                }else{
+                  return null;
                 }
-                return null;
               },
               onChanged: (String? value)=> setState(() {
                 _phoneNumber = value;

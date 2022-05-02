@@ -1,7 +1,9 @@
 import 'package:auth_app/screans/profile.dart';
 import 'package:auth_app/services/auth_services.dart';
+import 'package:auth_app/services/storage_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateProfile extends StatefulWidget {
   static const String routeName = '/create-profile';
@@ -14,6 +16,7 @@ class CreateProfile extends StatefulWidget {
 class _CreateProfileState extends State<CreateProfile> {
   final _formKey = GlobalKey<FormState>();
   String? _name;
+  StorageService _storageService = StorageService();
 
 
   @override
@@ -21,6 +24,8 @@ class _CreateProfileState extends State<CreateProfile> {
     final user = context.read<AuthService>().user;
     final _node = FocusScope.of(context);
     final size = MediaQuery.of(context).size;
+    final ImagePicker _picker = ImagePicker();
+
 
     return Scaffold(
       appBar: AppBar(
@@ -43,14 +48,21 @@ class _CreateProfileState extends State<CreateProfile> {
                       fit: StackFit.expand,
                       children: [
                          CircleAvatar(
-                          child:Icon(Icons.person,size: size.width/8,)
-                          // backgroundImage: AssetImage('assets/images/logo.jpeg'),
+                          child: user.photoURL == null ?  Icon(Icons.person,size: size.width/8,) : null ,
+                          backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
                         ),
                         Positioned(
                             bottom: -10,
                             right: -30,
                             child: RawMaterialButton(
-                              onPressed: () {
+                              onPressed: () async{
+                                final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                                await _storageService.uploadProfileImage(image!.path,image.name, user);
+                                // print(photoURL);
+                                // user.updatePhotoURL(photoURL);
+                                print('Imageeeeeeeeeeeee');
+                                print(image.name);
+                                print(image.path);
                                 // TODO : Change profile image logic
                               },
                               elevation: 2.0,

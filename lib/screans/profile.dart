@@ -57,7 +57,9 @@ class Profile extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: size.height/25),
               child: CircleAvatar(
                 radius: size.width/8,
-                child: Icon(Icons.person,size: size.width/8,),
+                // child: Icon(Icons.person,size: size.width/8,),
+                child: user.photoURL == null ?  Icon(Icons.person,size: size.width/8,) : null ,
+                backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
               ),
             ),
             Expanded(
