@@ -1,6 +1,7 @@
-import 'package:auth_app/screans/auth/get_otp.dart';
+import 'package:auth_app/services/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class InputPhone extends StatefulWidget {
   const InputPhone({Key? key}) : super(key: key);
@@ -13,21 +14,13 @@ class _InputPhoneState extends State<InputPhone> {
   final _formKey = GlobalKey<FormState>();
   String? _phoneNumber;
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   void onSubmit() async{
     if(_formKey.currentState!.validate()){
-      print(_phoneNumber);
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: _phoneNumber!,
-        verificationCompleted: (PhoneAuthCredential credential) {
-          Navigator.pushNamed(context, GetOTP.routeName);
-        },
-        verificationFailed: (FirebaseAuthException e) {},
-        codeSent: (String verificationId, int? resendToken) {
-          print(verificationId);
-          print(resendToken);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-      );
+      context
+          .read<AuthService>()
+          .phoneAuthentication(context, _phoneNumber!);
       // Navigator.pushNamed(context, GetOTP.routeName);
     }
   }

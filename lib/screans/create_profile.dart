@@ -1,5 +1,7 @@
 import 'package:auth_app/screans/profile.dart';
+import 'package:auth_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateProfile extends StatefulWidget {
   static const String routeName = '/create-profile';
@@ -12,15 +14,17 @@ class CreateProfile extends StatefulWidget {
 class _CreateProfileState extends State<CreateProfile> {
   final _formKey = GlobalKey<FormState>();
   String? _name;
-  String? _email;
+
+
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthService>().user;
     final _node = FocusScope.of(context);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create profile'),
+        title: const Text('Change profile'),
       ),
       body: SizedBox(
         width: size.width,
@@ -71,33 +75,9 @@ class _CreateProfileState extends State<CreateProfile> {
                         textAlign: TextAlign.center,
                         keyboardType: TextInputType.name,
                         onEditingComplete: () => _node.nextFocus(),
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(Icons.person_outline_outlined),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
-                        onChanged: (String? value)=> setState(() {
-                          _name = value;
-                        }),
-                        onSaved: (String? value) => setState(() {
-                          _name = value;
-                        }),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 15),
-                      child: TextFormField(
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.name,
-                        onEditingComplete: () => _node.nextFocus(),
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined),
+                        decoration: InputDecoration(
+                          labelText: user.displayName != null ? user.displayName.toString() : 'Username',
+                          prefixIcon: const Icon(Icons.person_outline_outlined),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -123,9 +103,12 @@ class _CreateProfileState extends State<CreateProfile> {
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton(
             onPressed: (){
-              Navigator.pushNamed(context, Profile.routeName);
+              if(_formKey.currentState!.validate()){
+                user.updateDisplayName(_name);
+                Navigator.pushNamed(context, Profile.routeName);
+              }
             },
-            child: Text('CREATE',style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),)),
+            child: Text('SAVE CHANGES',style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),)),
       ),
     );
   }

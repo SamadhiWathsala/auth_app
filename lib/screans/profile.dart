@@ -1,4 +1,7 @@
+import 'package:auth_app/screans/create_profile.dart';
+import 'package:auth_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatelessWidget {
   static const String routeName = '/profile';
@@ -6,6 +9,7 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AuthService>().user;
     final size = MediaQuery.of(context).size;
     Widget nameCard(String name,IconData icon){
       return Padding(
@@ -34,6 +38,14 @@ class Profile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        actions: [
+          IconButton(
+              onPressed: (){
+                context.read<AuthService>().signOut(context);
+              },
+              icon: const Icon(Icons.logout_outlined)
+          ),
+        ],
       ),
       body: SizedBox(
         width: size.width,
@@ -48,11 +60,28 @@ class Profile extends StatelessWidget {
                 child: Icon(Icons.person,size: size.width/8,),
               ),
             ),
-            nameCard('User name', Icons.person_outline_outlined),
-            nameCard('Phone number', Icons.phone_outlined),
-            nameCard('User email', Icons.phone_outlined)
+            Expanded(
+              child: ListView(
+                children: [
+                  nameCard(
+                      user.displayName == null ? 'Set your name' : user.displayName.toString(),
+                      Icons.person_outline_outlined,),
+                  nameCard(user.phoneNumber.toString(), Icons.phone_outlined),
+                  // nameCard(user.email== null ? 'Set your email' : user.email.toString(), Icons.email_outlined)
+                ],
+              ),
+            ),
+
           ],
         ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+            onPressed: (){
+              Navigator.pushNamed(context, CreateProfile.routeName);
+            },
+            child: Text('CHANGE PROFILE',style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),)),
       ),
     );
   }
